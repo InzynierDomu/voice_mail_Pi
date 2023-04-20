@@ -1,4 +1,5 @@
 import subprocess
+import datetime
 import RPi.GPIO as GPIO
 
 button_pin = 17
@@ -11,11 +12,15 @@ GPIO.setup(led_pin, GPIO.OUT, initial=GPIO.LOW)
 GPIO.output(led_pin, GPIO.HIGH)
 
 while True:
-    # Oczekiwanie na naciśnięcie przycisku
+    # zmienic na sprawdzenie zbocza narastajacego
     if GPIO.input(button_pin):
-        subprocess.Popen(["aplay", "test.wav"])
+        subprocess.Popen(["aplay", "voice_mail_greetings.wav"])
         GPIO.output(led_pin, GPIO.HIGH)
-        process = subprocess.Popen(["arecord", "-D", "plughw:1,0", "--duration=60", "--format=cd", "test.wav"])
+        now = datetime.datetime.now()
+        date_time = now.strftime("%Y-%m-%d_%H-%M-%S")
+        file_name = f"nagranie_{date_time}.wav"
+        process = subprocess.Popen(["arecord", "-D", "plughw:1,0", "--duration=60", "--format=cd", file_name])
+        GPIO.output(led_pin, GPIO.LOW)
 
     #sprawdzenie czy zostało przerwane
     #GPIO.output(led_pin, GPIO.LOW)
