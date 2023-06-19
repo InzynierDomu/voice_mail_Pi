@@ -24,10 +24,12 @@ pip3 install pygame
 ```
 
 ## Scheme
-Parts needed:
+### Part list
 - Raspberry Pi
 - USB audio card
 - limit switch
 - LED
 - resistor 200 ohm
 - Power bank
+- Switch
+- Power supply
