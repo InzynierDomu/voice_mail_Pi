@@ -24,12 +24,28 @@ pip3 install pygame
 ```
 
 ## Scheme
+![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
 ### Part list
 - Raspberry Pi
 - USB audio card
 - limit switch
 - LED
-- resistor 200 ohm
+- resistor 200 ohm (for LED)
 - Power bank
 - Switch
 - Power supply
+
+## Configuration & using
+Before using check audio device:
+- with command 
+  ```arecord -l```
+check audio card number and subdevice number.
+- If it's needed change line 42 "plughw:1,0"
+- Default it's card 1 and subdevice 0.
+TBD automate finding audio card.
+
+To change the greeting you need to replace the file "/home/pi/welcome_record.wav". Best way for that is using FTP.
+On default timeout for record is 3 min. It's hard coded in line 42 main script -duration. TBD make separate configuration file.
+
+After picking up the handset (limit switch), greeting will be played, then the green LED will light up and recording will start. 
+After hanging up the handset (limit switch) or timeout, the recording will be saved using the date and time.
