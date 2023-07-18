@@ -7,7 +7,7 @@
 
 ## Description
 The device is used to record voice messages after listening to the greeting. It can be used as a phone for wishes or for taking voice notes.
-![alt text](https://www.inzynierdomu.pl/img_6791/)
+![[alt text](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6791-scaled.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6791-scaled.jpg)
 
 ## Installation
 On Raspberry Pi, there'll need an SD with Raspbian. 
@@ -25,7 +25,7 @@ pip3 install pygame
 ```
 
 ## Scheme
-![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
+![[alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6783-scaled.jpg)
 ### Part list
 - Raspberry Pi
 - USB audio card
