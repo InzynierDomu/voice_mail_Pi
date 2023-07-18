@@ -25,7 +25,7 @@ pip3 install pygame
 ```
 
 ## Scheme
-![[alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6783-scaled.jpg)
+![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
 ### Part list
 - Raspberry Pi
 - USB audio card
@@ -36,7 +36,7 @@ pip3 install pygame
 - Switch
 - Power supply
 
-![schem](https://www.inzynierdomu.pl/img_6783/)
+![[alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6783-scaled.jpg)
 
 ## Configuration & using
 Before using check audio device:
