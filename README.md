@@ -36,7 +36,7 @@ pip3 install pygame
 - Switch
 - Power supply
 
-![alt text](https://www.inzynierdomu.pl/img_6783/)
+![schem](https://www.inzynierdomu.pl/img_6783/)
 
 ## Configuration & using
 Before using check audio device:
