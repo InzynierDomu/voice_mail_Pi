@@ -6,6 +6,8 @@
 <a href="https://tipo.live/p/inzynierdomu">![support](https://img.shields.io/badge/support-tipo.live-yellow?style=flat-square)</a>
 
 ## Description
+The video with the entire project can be watched on this [video](https://youtu.be/qu0FXGwLReU)
+
 The device is used to record voice messages after listening to the greeting. It can be used as a phone for wishes or for taking voice notes.
 ![[alt text](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6791-scaled.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6791-scaled.jpg)
 
