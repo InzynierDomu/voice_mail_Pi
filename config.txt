@@ -1,0 +1,2 @@
+nazwa_pliku_z_powitaniem:welcome.wav
+nazwa_pliku_z_sygnalem:signal.wav
