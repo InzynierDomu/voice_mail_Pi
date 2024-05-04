@@ -24,7 +24,7 @@ def read_config_file(filename):
 # Wywołanie funkcji z nazwą pliku konfiguracyjnego
 read_config_file("config.txt")
 
-def write_log(log)
+def write_log(log):
     with open('log.txt', 'w') as file:
         file.write(log)
 
