@@ -1,4 +1,5 @@
 import subprocess
+import re
 import time
 import pygame
 from datetime import datetime
@@ -11,47 +12,63 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(led_pin, GPIO.OUT, initial=GPIO.LOW)
 def read_config_file(filename):
+    config_dict = {}
     try:
         with open(filename, 'r') as file:
             lines = file.readlines()
             for line in lines:
                 if ':' in line:
                     key, value = line.strip().split(':', 1)
-                    globals()[key.strip()] = value.strip()
+                    config_dict[key.strip()] = value.strip()
     except Exception as e:
         print("Error:", e)
-
-# Wywołanie funkcji z nazwą pliku konfiguracyjnego
-read_config_file("config.txt")
+    return config_dict
 
 def write_log(log):
-    with open('log.txt', 'w') as file:
-        file.write(log)
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with open('log.txt', 'a') as file:
+        file.write(f'{timestamp}: {log}\n')
 
-audio_status = subprocess.run(
-    ['arecord', '-l'], capture_output=True, text=True)
-if audio_status.returncode == 0:
-    write_log(audio_status.stdout)
+config = read_config_file("config.txt")
+welcome_record_path = config.get('welcome_record_path')
+signal_record_path = config.get('signal_record_path')
+
+card_pattern = r"card (\d+):"
+subdevice_pattern = r"Subdevice #(\d+):"
+output = subprocess.check_output(["arecord", "-l"])
+card_match = re.search(card_pattern, output.decode('utf-8'))
+subdevice_match = re.search(subdevice_pattern, output.decode('utf-8'))
+
+if card_match and subdevice_match:
+    # Extract card and subdevice values from the matches
+    card = int(card_match.group(1))
+    subdevice = int(subdevice_match.group(1))
+
+    print("Card:", card)
+    print("Subdevice:", subdevice)
 else:
-    write_log("error with audio card")
+    write_log("Unable to extract card and subdevice values.")
+
+def button_callback(channel):
+    GPIO.output(led_pin, GPIO.LOW)
+
+GPIO.add_event_detect(button_pin, GPIO.RISING, callback=button_callback, bouncetime=200)
 
 while True:
-    GPIO.output(led_pin, GPIO.LOW)
-    GPIO.wait_for_edge(button_pin, GPIO.RISING)
     time.sleep(2)
     if GPIO.input(button_pin) == GPIO.HIGH:
         pygame.init()
         try:
-            pygame.mixer.music.load(nazwa_pliku_z_powitaniem)
+            pygame.mixer.music.load(welcome_record_path)
         except:
-            write_log("błędna ściezka do pliku z powitaniem")
+            write_log("incorrect path to the welcome record")
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             continue
         try:
-            pygame.mixer.music.load(nazwa_pliku_z_sygnalem)
+            pygame.mixer.music.load(signal_record_path)
         except:
-            write_log("błędna ściezka do pliku z sygnałem")
+            write_log("incorrect path to the signal record")
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             continue
@@ -59,7 +76,14 @@ while True:
         GPIO.output(led_pin, GPIO.HIGH)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = timestamp + ".wav"
-        process = subprocess.Popen(
-            ["arecord", "-D", "plughw:1,0", "--duration=360", "--format=cd", filename])
+        plughw_string = f"plughw:{card},{subdevice}"
+        process = subprocess.Popen([
+            "arecord",
+            "-D",
+            plughw_string,
+            "--duration=360",
+            "--format=cd",
+            filename
+        ])
         GPIO.wait_for_edge(button_pin, GPIO.FALLING)
         process.terminate()

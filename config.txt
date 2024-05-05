@@ -1,2 +1,2 @@
-nazwa_pliku_z_powitaniem:welcome.wav
-nazwa_pliku_z_sygnalem:signal.wav
+welcome_record_path:welcome.wav
+signal_record_path:signal.wav
