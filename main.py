@@ -49,12 +49,9 @@ if card_match and subdevice_match:
 else:
     write_log("Unable to extract card and subdevice values.")
 
-def button_callback(channel):
-    GPIO.output(led_pin, GPIO.LOW)
-
-GPIO.add_event_detect(button_pin, GPIO.RISING, callback=button_callback, bouncetime=200)
-
 while True:
+    GPIO.output(led_pin, GPIO.LOW)
+    GPIO.wait_for_edge(button_pin, GPIO.RISING)
     time.sleep(2)
     if GPIO.input(button_pin) == GPIO.HIGH:
         pygame.init()
