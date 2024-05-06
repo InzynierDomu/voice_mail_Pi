@@ -5,8 +5,8 @@ import pygame
 from datetime import datetime
 import RPi.GPIO as GPIO
 
-button_pin = 1
-led_pin = 12
+button_pin = 23
+led_pin = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
