@@ -17,10 +17,6 @@ It's best to update it.
 ```
 sudo apt-get update
 ```
-An FTP server must be installed.
-```
-sudo apt-get install proftpd
-```
 There'll need the pygame library to run the script.
 ```
 pip3 install pygame
@@ -49,7 +45,12 @@ check audio card number and subdevice number.
 - Default it's card 1 and subdevice 0.
 TBD automate finding audio card.
 
-To change the greeting you need to replace the file "/home/pi/welcome_record.wav". Best way for that is using FTP.
+To easily modify greeting files and download recordings, it's recommended to use FTP (File Transfer Protocol).
+- Install the FTP server on your Raspberry Pi using the following command:
+```sudo apt-get install proftpd```
+- Download and install the FTP client such as Filezilla on your computer.
+- Connect to your Raspberry Pi using an FTP client. You'll need the IP address of your Raspberry Pi, along with the username and password.
+
 On default timeout for record is 3 min. It's hard coded in line 42 main script -duration. TBD make separate configuration file.
 
 After picking up the handset (limit switch), greeting will be played, then the green LED will light up and recording will start. 
