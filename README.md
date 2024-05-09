@@ -23,7 +23,6 @@ pip3 install pygame
 ```
 
 ## Scheme
-![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
 ### Part list
 - Raspberry Pi
 - USB audio card
@@ -33,7 +32,8 @@ pip3 install pygame
 - Power bank
 - Switch
 - Power supply
-
+![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
+Connect the sound card with a microphone and speaker to USB. Power the Raspberry from a power bank via an additional switch.
 ![[alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6783-scaled.jpg)
 
 ## Configuration & using
