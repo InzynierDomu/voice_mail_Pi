@@ -4,6 +4,7 @@ import time
 import pygame
 from datetime import datetime
 import RPi.GPIO as GPIO
+import os
 
 button_pin = 23
 led_pin = 24
@@ -11,6 +12,7 @@ led_pin = 24
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(led_pin, GPIO.OUT, initial=GPIO.LOW)
+current_dir = os.path.dirname(os.path.abspath(__file__))
 def read_config_file(filename):
     config_dict = {}
     try:
@@ -26,10 +28,12 @@ def read_config_file(filename):
 
 def write_log(log):
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    with open('log.txt', 'a') as file:
+    log_path = os.path.join(current_dir, 'log.txt')
+    with open(log_path, 'a') as file:
         file.write(f'{timestamp}: {log}\n')
 
-config = read_config_file("config.txt")
+config_file_path = os.path.join(current_dir, 'config.txt')
+config = read_config_file(config_file_path)
 welcome_record_path = config.get('welcome_record_path')
 signal_record_path = config.get('signal_record_path')
 
@@ -72,7 +76,7 @@ while True:
         pygame.quit()
         GPIO.output(led_pin, GPIO.HIGH)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = timestamp + ".wav"
+        filename = current_dir + timestamp + ".wav"
         plughw_string = f"plughw:{card},{subdevice}"
         process = subprocess.Popen([
             "arecord",
