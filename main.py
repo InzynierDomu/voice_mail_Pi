@@ -36,6 +36,7 @@ config_file_path = os.path.join(current_dir, 'config.txt')
 config = read_config_file(config_file_path)
 welcome_record_path = config.get('welcome_record_path')
 signal_record_path = config.get('signal_record_path')
+record_timeout = config.get('record_timeout')
 
 card_pattern = r"card (\d+):"
 subdevice_pattern = r"Subdevice #(\d+):"
@@ -76,13 +77,13 @@ while True:
         pygame.quit()
         GPIO.output(led_pin, GPIO.HIGH)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = current_dir + timestamp + ".wav"
+        filename = current_dir + 'records/' +timestamp + ".wav"
         plughw_string = f"plughw:{card},{subdevice}"
         process = subprocess.Popen([
             "arecord",
             "-D",
             plughw_string,
-            "--duration=360",
+            "--duration=" + str(record_timeout),
             "--format=cd",
             filename
         ])
