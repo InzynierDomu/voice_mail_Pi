@@ -77,7 +77,9 @@ while True:
         pygame.quit()
         GPIO.output(led_pin, GPIO.HIGH)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = current_dir + 'records/' +timestamp + ".wav"
+        filename = timestamp + ".wav"
+        file_path = os.path.join(current_dir, 'records', filename)
+        write_log(file_path) #for test
         plughw_string = f"plughw:{card},{subdevice}"
         process = subprocess.Popen([
             "arecord",

@@ -1,3 +1,3 @@
 welcome_record_path:welcome.wav
 signal_record_path:signal.wav
-record_timeout:360
+record_timeout:3600
