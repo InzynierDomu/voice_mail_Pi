@@ -27,7 +27,7 @@ def read_config_file(filename):
     return config_dict
 
 def write_log(log):
-    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_path = os.path.join(current_dir, 'log.txt')
     with open(log_path, 'a') as file:
         file.write(f'{timestamp}: {log}\n')
