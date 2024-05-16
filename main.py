@@ -1,24 +1,58 @@
 import subprocess
+import re
 import time
 import pygame
 from datetime import datetime
 import RPi.GPIO as GPIO
+import os
 
-button_pin = 1
-led_pin = 12
+button_pin = 23
+led_pin = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(led_pin, GPIO.OUT, initial=GPIO.LOW)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+def read_config_file(filename):
+    config_dict = {}
+    try:
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                if ':' in line:
+                    key, value = line.strip().split(':', 1)
+                    config_dict[key.strip()] = value.strip()
+    except Exception as e:
+        print("Error:", e)
+    return config_dict
 
-audio_status = subprocess.run(
-    ['arecord', '-l'], capture_output=True, text=True)
-if audio_status.returncode == 0:
-    with open('/home/pi/output.txt', 'w') as file:
-        file.write(audio_status.stdout)
+def write_log(log):
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    log_path = os.path.join(current_dir, 'log.txt')
+    with open(log_path, 'a') as file:
+        file.write(f'{timestamp}: {log}\n')
+
+config_file_path = os.path.join(current_dir, 'config.txt')
+config = read_config_file(config_file_path)
+welcome_record_path = config.get('welcome_record_path')
+signal_record_path = config.get('signal_record_path')
+record_timeout = config.get('record_timeout')
+
+card_pattern = r"card (\d+):"
+subdevice_pattern = r"Subdevice #(\d+):"
+output = subprocess.check_output(["arecord", "-l"])
+card_match = re.search(card_pattern, output.decode('utf-8'))
+subdevice_match = re.search(subdevice_pattern, output.decode('utf-8'))
+
+if card_match and subdevice_match:
+    # Extract card and subdevice values from the matches
+    card = int(card_match.group(1))
+    subdevice = int(subdevice_match.group(1))
+
+    print("Card:", card)
+    print("Subdevice:", subdevice)
 else:
-    with open('/home/pi/output.txt', 'w') as file:
-        file.write("error with audio hw")
+    write_log("Unable to extract card and subdevice values.")
 
 while True:
     GPIO.output(led_pin, GPIO.LOW)
@@ -26,19 +60,32 @@ while True:
     time.sleep(2)
     if GPIO.input(button_pin) == GPIO.HIGH:
         pygame.init()
-        pygame.mixer.music.load("/home/pi/welcome_record.wav")
+        try:
+            pygame.mixer.music.load(welcome_record_path)
+        except:
+            write_log("incorrect path to the welcome record")
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             continue
-        pygame.mixer.music.load("/home/pi/signal.wav")
+        try:
+            pygame.mixer.music.load(signal_record_path)
+        except:
+            write_log("incorrect path to the signal record")
         pygame.mixer.music.play()
         while pygame.mixer.music.get_busy():
             continue
         pygame.quit()
         GPIO.output(led_pin, GPIO.HIGH)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = "/home/pi/record_" + timestamp + ".wav"
-        process = subprocess.Popen(
-            ["arecord", "-D", "plughw:1,0", "--duration=360", "--format=cd", filename])
+        filename = current_dir + 'records/' +timestamp + ".wav"
+        plughw_string = f"plughw:{card},{subdevice}"
+        process = subprocess.Popen([
+            "arecord",
+            "-D",
+            plughw_string,
+            "--duration=" + str(record_timeout),
+            "--format=cd",
+            filename
+        ])
         GPIO.wait_for_edge(button_pin, GPIO.FALLING)
         process.terminate()

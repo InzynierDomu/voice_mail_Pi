@@ -17,17 +17,27 @@ It's best to update it.
 ```
 sudo apt-get update
 ```
-An FTP server must be installed.
-```
-sudo apt-get install proftpd
-```
 There'll need the pygame library to run the script.
 ```
 pip3 install pygame
 ```
+### Adding to Autostart
+To automatically start the project upon boot, follow these steps:
+- Edit the autostart file by running the following command:
+```
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+```
+- Add the following line to the end of the file, replacing <path to main.py script> with the actual path to your main.py script:
+```
+@/usr/bin/python <path to main.py script>
+```
+For example:
+```
+@/usr/bin/python /home/pi/voice_mail_Pi/main.py
+```
+- Save the file and reboot, the script will start automatically upon booting up the Raspberry Pi
 
 ## Scheme
-![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
 ### Part list
 - Raspberry Pi
 - USB audio card
@@ -37,20 +47,20 @@ pip3 install pygame
 - Power bank
 - Switch
 - Power supply
-
+![alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)
+Connect the sound card with a microphone and speaker to USB. Power the Raspberry from a power bank via an additional switch.
 ![[alt text](https://github.com/InzynierDomu/voice_mail_Pi/blob/main/pi_voice_mail_schem.jpg)](https://www.inzynierdomu.pl/wp-content/uploads/2019/12/IMG_6783-scaled.jpg)
 
 ## Configuration & using
 Before using check audio device:
 - with command 
   ```arecord -l```
-check audio card number and subdevice number.
-- If it's needed change line 42 "plughw:1,0"
-- Default it's card 1 and subdevice 0.
-TBD automate finding audio card.
 
-To change the greeting you need to replace the file "/home/pi/welcome_record.wav". Best way for that is using FTP.
-On default timeout for record is 3 min. It's hard coded in line 42 main script -duration. TBD make separate configuration file.
+To easily modify greeting files and download recordings, it's recommended to use FTP (File Transfer Protocol).
+- Install the FTP server on your Raspberry Pi using the following command:
+```sudo apt-get install proftpd```
+- Download and install the FTP client such as Filezilla on your computer.
+- Connect to your Raspberry Pi using an FTP client. You'll need the IP address of your Raspberry Pi, along with the username and password.
 
 After picking up the handset (limit switch), greeting will be played, then the green LED will light up and recording will start. 
 After hanging up the handset (limit switch) or timeout, the recording will be saved using the date and time.
