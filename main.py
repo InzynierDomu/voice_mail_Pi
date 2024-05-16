@@ -34,8 +34,8 @@ def write_log(log):
 
 config_file_path = os.path.join(current_dir, 'config.txt')
 config = read_config_file(config_file_path)
-welcome_record_path = config.get('welcome_record_path')
-signal_record_path = config.get('signal_record_path')
+welcome_record_path = os.path.join(current_dir, config.get('welcome_record_path'))
+signal_record_path = os.path.join(current_dir, config.get('signal_record_path'))
 record_timeout = config.get('record_timeout')
 
 card_pattern = r"card (\d+):"
