@@ -45,7 +45,6 @@ card_match = re.search(card_pattern, output.decode('utf-8'))
 subdevice_match = re.search(subdevice_pattern, output.decode('utf-8'))
 
 if card_match and subdevice_match:
-    # Extract card and subdevice values from the matches
     card = int(card_match.group(1))
     subdevice = int(subdevice_match.group(1))
 
@@ -77,9 +76,8 @@ while True:
         pygame.quit()
         GPIO.output(led_pin, GPIO.HIGH)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = timestamp + ".wav"
-        file_path = os.path.join(current_dir, 'records', filename)
-        write_log(file_path) #for test
+        file_name = timestamp + ".wav"
+        file_path = os.path.join(current_dir, 'records', file_name)
         plughw_string = f"plughw:{card},{subdevice}"
         process = subprocess.Popen([
             "arecord",
@@ -87,7 +85,7 @@ while True:
             plughw_string,
             "--duration=" + str(record_timeout),
             "--format=cd",
-            filename
+            file_path
         ])
         GPIO.wait_for_edge(button_pin, GPIO.FALLING)
         process.terminate()
